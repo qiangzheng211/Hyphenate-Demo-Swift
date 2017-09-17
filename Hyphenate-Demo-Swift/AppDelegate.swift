@@ -21,7 +21,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
         UITabBar.appearance().tintColor = KermitGreenTwoColor
         UINavigationBar.appearance().tintColor = AlmostBlackColor
         
-        let options = EMOptions.init(appkey: "hyphenatedemo#hyphenatedemo")     
+        let options = EMOptions.init(appkey: "1503170916002325#tchack")
         
         var apnsCerName = ""     
         #if DEBUG

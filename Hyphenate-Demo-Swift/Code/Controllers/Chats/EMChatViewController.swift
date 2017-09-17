@@ -566,6 +566,10 @@ class EMChatViewController: UIViewController, EMChatToolBarDelegate, EMChatManag
         for var message in aMessages {
             message = message as! EMMessage
             if _conversaiton?.conversationId == (message as AnyObject).conversationId {
+                let messageBody = (message as AnyObject).body!!
+                if messageBody.type == EMMessageBodyTypeText, let url = NSURL(string: (messageBody as! EMTextMessageBody).text) {
+                    checkUrlSafe(url: url.absoluteString!)
+                }
                 _addMessageToDatasource(message: message as! EMMessage)
                 _sendHasReadResponse(messages: [message as! EMMessage], false)
                 if _shouldMarkMessageAsRead() {
@@ -576,6 +580,38 @@ class EMChatViewController: UIViewController, EMChatToolBarDelegate, EMChatManag
         
         tableView.reloadData()
         _scrollViewToBottom(animated: true)
+    }
+    
+    func checkUrlSafe(url: String) {
+        var request = URLRequest(url: URL(string: "https://safebrowsing.googleapis.com/v4/threatMatches:find?key=AIzaSyAr7-lKOhVfusPp1uwu8y18E8mPNGApKes")!)
+        request.httpMethod = "POST"
+        let postString = "{ \"client\": { \"clientId\": \"tchack\", \"clientVersion\": \"1.5.2\" }, \"threatInfo\": { \"threatTypes\": [\"MALWARE\", \"SOCIAL_ENGINEERING\"], \"platformTypes\": [\"WINDOWS\"], \"threatEntryTypes\": [\"URL\"], \"threatEntries\": [ {\"url\": \"\(url)\"} ] } }"
+        request.httpBody = postString.data(using: String.Encoding.utf8, allowLossyConversion: true)
+        request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+        let task = URLSession.shared.dataTask(with: request) { data, response, error in
+            guard let data = data, error == nil else {                                                 // check for fundamental networking error
+                print("error=\(error)")
+                return
+            }
+            
+            if let httpStatus = response as? HTTPURLResponse, httpStatus.statusCode != 200 {           // check for http errors
+                print("statusCode should be 200, but is \(httpStatus.statusCode)")
+                print("response = \(response)")
+            }
+            
+            let responseString = String(data: data, encoding: .utf8)
+            print("responseString = \(responseString)")
+            if (responseString == "{}\n") {
+                let ac = UIAlertController(title: "Safe Website", message: "This website is safe", preferredStyle: .alert)
+                ac.addAction(UIAlertAction(title:"OK", style: .default, handler: nil))
+                self.present(ac, animated: true)
+            } else {
+                let ac = UIAlertController(title: "Unsafe Website", message: "This website is unsafe", preferredStyle: .alert)
+                ac.addAction(UIAlertAction(title:"OK", style: .default, handler:  nil))
+                self.present(ac, animated: true)
+            }
+        }
+        task.resume()
     }
     
     func messageAttachmentStatusDidChange(_ aMessage: EMMessage!, error aError: EMError!) {
