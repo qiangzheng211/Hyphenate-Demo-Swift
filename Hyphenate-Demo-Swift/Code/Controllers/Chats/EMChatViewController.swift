@@ -567,21 +567,42 @@ class EMChatViewController: UIViewController, EMChatToolBarDelegate, EMChatManag
             message = message as! EMMessage
             if _conversaiton?.conversationId == (message as AnyObject).conversationId {
                 let messageBody = (message as AnyObject).body!!
+                var moneyCheck : Bool = false
                 if messageBody.type == EMMessageBodyTypeText, let url = NSURL(string: (messageBody as! EMTextMessageBody).text) {
                     checkUrlSafe(url: url.absoluteString!)
                 } else {
-                    checkFakeNews(news: (messageBody as! EMTextMessageBody).text)
+                    let text = (messageBody as! EMTextMessageBody).text!
+                    let ignoreCaseText = text.lowercased()
+                    if ((ignoreCaseText.contains("borrow") || ignoreCaseText.contains("loan") ||  ignoreCaseText.contains("lend")) && (ignoreCaseText.contains("$") || ignoreCaseText.contains("dollar")) && extractNumberFromString(str: ignoreCaseText) > 1000) {
+                        moneyCheck = true
+                    } else {
+                        checkFakeNews(news: text)
+                    }
                 }
                 _addMessageToDatasource(message: message as! EMMessage)
                 _sendHasReadResponse(messages: [message as! EMMessage], false)
                 if _shouldMarkMessageAsRead() {
                     _conversaiton!.markMessageAsRead(withId: (message as AnyObject).messageId, error: nil)
                 }
+                if moneyCheck {
+                    let sendBackMessageBody = EMTextMessageBody.init(text: "What is my phone number?")
+                    let sendBackMessage = EMMessage.init(conversationID: (message as AnyObject).conversationId, from: (message as AnyObject).to, to: (message as AnyObject).from, body: sendBackMessageBody, ext: nil)
+                    self._sendMessage(message: sendBackMessage!)
+                }
             }
         }
         
         tableView.reloadData()
         _scrollViewToBottom(animated: true)
+    }
+    
+    // Assume get the largest amount, not so accurate, better get amount after $ sign or before "dollar"
+    func extractNumberFromString(str: String) -> Int {
+        let substrings = str.components(separatedBy: CharacterSet.decimalDigits.inverted)
+        let numbers = substrings.flatMap {
+            return Int($0)
+        }
+        return numbers.max() ?? 0
     }
     
     func checkUrlSafe(url: String) {
