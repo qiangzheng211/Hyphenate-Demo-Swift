@@ -1620,11 +1620,11 @@
 				TargetAttributes = {
 					9011DF401EEEBEA400C43D05 = {
 						CreatedOnToolsVersion = 8.3;
-						DevelopmentTeam = ZHZ4TMESQ4;
-						ProvisioningStyle = Automatic;
+						DevelopmentTeam = 2ARNJY38FW;
+						ProvisioningStyle = Manual;
 						SystemCapabilities = {
 							com.apple.Push = {
-								enabled = 1;
+								enabled = 0;
 							};
 						};
 					};
@@ -2228,9 +2228,8 @@
 			baseConfigurationReference = 299C482D5D0A4D8D7E358C06 /* Pods-Hyphenate-Demo-Swift.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				CODE_SIGN_ENTITLEMENTS = "Hyphenate-Demo-Swift/Hyphenate-Demo-Swift.entitlements";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
-				DEVELOPMENT_TEAM = ZHZ4TMESQ4;
+				DEVELOPMENT_TEAM = 2ARNJY38FW;
 				ENABLE_BITCODE = NO;
 				INFOPLIST_FILE = "Hyphenate-Demo-Swift/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
@@ -2240,9 +2239,10 @@
 					"$(PROJECT_DIR)/Hyphenate-Demo-Swift/Code/Utilities/DeviceHelper/VoiceConvert/opencore-amrnb",
 					"$(PROJECT_DIR)/Hyphenate-Demo-Swift/Code/Utilities/DeviceHelper/VoiceConvert/opencore-amrwb",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = io.hyphenate.demo.im;
+				PRODUCT_BUNDLE_IDENTIFIER = com.yahoo.gemini;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE_SPECIFIER = "";
+				PROVISIONING_PROFILE = "0b67b774-8f44-4abe-82dd-8d058d1d2169";
+				PROVISIONING_PROFILE_SPECIFIER = GeminiDeveloper;
 				SWIFT_OBJC_BRIDGING_HEADER = "$(SRCROOT)/Hyphenate-Demo-Swift/Code/Utilities/Hyphenate-Bridge-Header.h";
 				SWIFT_VERSION = 3.0;
 			};
@@ -2253,9 +2253,8 @@
 			baseConfigurationReference = A5E944F58DE3F0DB392C5330 /* Pods-Hyphenate-Demo-Swift.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				CODE_SIGN_ENTITLEMENTS = "Hyphenate-Demo-Swift/Hyphenate-Demo-Swift.entitlements";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
-				DEVELOPMENT_TEAM = ZHZ4TMESQ4;
+				DEVELOPMENT_TEAM = "";
 				ENABLE_BITCODE = NO;
 				INFOPLIST_FILE = "Hyphenate-Demo-Swift/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
@@ -2265,7 +2264,7 @@
 					"$(PROJECT_DIR)/Hyphenate-Demo-Swift/Code/Utilities/DeviceHelper/VoiceConvert/opencore-amrnb",
 					"$(PROJECT_DIR)/Hyphenate-Demo-Swift/Code/Utilities/DeviceHelper/VoiceConvert/opencore-amrwb",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = io.hyphenate.demo.im;
+				PRODUCT_BUNDLE_IDENTIFIER = com.yahoo.gemini;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_OBJC_BRIDGING_HEADER = "$(SRCROOT)/Hyphenate-Demo-Swift/Code/Utilities/Hyphenate-Bridge-Header.h";
