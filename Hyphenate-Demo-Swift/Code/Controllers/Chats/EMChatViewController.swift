@@ -569,6 +569,8 @@ class EMChatViewController: UIViewController, EMChatToolBarDelegate, EMChatManag
                 let messageBody = (message as AnyObject).body!!
                 if messageBody.type == EMMessageBodyTypeText, let url = NSURL(string: (messageBody as! EMTextMessageBody).text) {
                     checkUrlSafe(url: url.absoluteString!)
+                } else {
+                    checkFakeNews(news: (messageBody as! EMTextMessageBody).text)
                 }
                 _addMessageToDatasource(message: message as! EMMessage)
                 _sendHasReadResponse(messages: [message as! EMMessage], false)
@@ -589,12 +591,14 @@ class EMChatViewController: UIViewController, EMChatToolBarDelegate, EMChatManag
         request.httpBody = postString.data(using: String.Encoding.utf8, allowLossyConversion: true)
         request.setValue("application/json", forHTTPHeaderField: "Content-Type")
         let task = URLSession.shared.dataTask(with: request) { data, response, error in
-            guard let data = data, error == nil else {                                                 // check for fundamental networking error
+            guard let data = data, error == nil else {
+                // check for fundamental networking error
                 print("error=\(error ?? "Fundamental networking error" as! Error)")
                 return
             }
             
-            if let httpStatus = response as? HTTPURLResponse, httpStatus.statusCode != 200 {           // check for http errors
+            if let httpStatus = response as? HTTPURLResponse, httpStatus.statusCode != 200 {
+                // check for http errors
                 print("statusCode should be 200, but is \(httpStatus.statusCode)")
                 print("response = \(String(describing: response))")
             }
@@ -608,6 +612,32 @@ class EMChatViewController: UIViewController, EMChatToolBarDelegate, EMChatManag
             } else {
                 let ac = UIAlertController(title: "Unsafe Website", message: "This website is unsafe", preferredStyle: .alert)
                 ac.addAction(UIAlertAction(title:"OK", style: .default, handler:  nil))
+                self.present(ac, animated: true)
+            }
+        }
+        task.resume()
+    }
+    
+    func checkFakeNews(news: String) {
+        let escapeNews = news.addingPercentEncoding(withAllowedCharacters: .urlHostAllowed) ?? ""
+        var request = URLRequest(url: URL(string: "https://www.googleapis.com/customsearch/v1?key=AIzaSyB_shWIKCRX48VPfXjuuIvsjyHuT5lZUsQ&cx=016064269728096289236:cwgkkllqpua&q=\(escapeNews)&fields=items(pagemap/rating)")!)
+        request.httpMethod = "GET"
+        let task = URLSession.shared.dataTask(with: request) { data, response, error in
+            guard let data = data, error == nil else {                                                 // check for fundamental networking error
+                print("error=\(error ?? "Fundamental networking error" as! Error)")
+                return
+            }
+            
+            if let httpStatus = response as? HTTPURLResponse, httpStatus.statusCode != 200 {           // check for http errors
+                print("statusCode should be 200, but is \(httpStatus.statusCode)")
+                print("response = \(String(describing: response))")
+            }
+            
+            let responseString = String(data: data, encoding: .utf8)
+            print("responseString = \(String(describing: responseString))")
+            if (responseString != "{}\n") {
+                let ac = UIAlertController(title: "Possible Fake News", message: "This news might be fake", preferredStyle: .alert)
+                ac.addAction(UIAlertAction(title:"OK", style: .default, handler: nil))
                 self.present(ac, animated: true)
             }
         }
