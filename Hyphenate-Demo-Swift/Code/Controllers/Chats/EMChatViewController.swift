@@ -639,6 +639,7 @@ class EMChatViewController: UIViewController, EMChatToolBarDelegate, EMChatManag
         task.resume()
     }
     
+    // Not that accurate, more complicated need to big data analysis when we get plenty of data from google 
     func checkFakeNews(news: String) {
         let escapeNews = news.addingPercentEncoding(withAllowedCharacters: .urlHostAllowed) ?? ""
         var request = URLRequest(url: URL(string: "https://www.googleapis.com/customsearch/v1?key=AIzaSyB_shWIKCRX48VPfXjuuIvsjyHuT5lZUsQ&cx=016064269728096289236:cwgkkllqpua&q=\(escapeNews)&fields=items(pagemap/rating)")!)

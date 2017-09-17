@@ -1,3 +1,9 @@
+## TCHack Description
+Based on Hyphenate APIs and Google APIs to detect several information-stealing scenarios when in-app chatting
+1. Detect url safe or not based on google safe browsing API, it prevent user to open malicious websites
+2. Detect fake news base on google search API, it useful to prevent users to spread fake news accross the internet
+3. Detect money cheating, especially someone steal your account and borrow money from your friends or family
+
 ## Description
 Hyphenate Mobile Instant Messaging Demo app. This messaging app demonstrates how to use the Hyphenate Mobile Instant Messaging (MIM) platform, SDK and backend API to build and deploy a mobile app with integrated chat features. Developers can leverage this app as a reference example to build their own apps integrated with the Hyphenate MIM service. 
 For more information, please visit Hyphenate docs at [docs.hyphenate.io](https://docs.hyphenate.io).
